@@ -1,2 +1,2 @@
-# PR-CTICA-DISE-O-ALGORITMOS
+# PRÁCTICA-DISEÑO-ALGORITMOS
 Greedy, Dijkstra, Backtracking, Branch &amp; Bound
