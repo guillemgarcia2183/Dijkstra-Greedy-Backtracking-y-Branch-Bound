@@ -1,10 +1,8 @@
+import graph
 import math
 import sys
 import queue
-
-# sys.path.append('PythonSalesMan')
 import dijkstra
-import graph
    
 # SalesmanTrackBranchAndBound1 ===================================================
 

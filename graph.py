@@ -1,11 +1,10 @@
 # Classes per la representació de grafs i altres estructures per la pràctica
-
 import math
 import sys
 import subprocess
 import time
 
-# sys.path.append('PythonSalesMan')
+sys.path.append('PythonSalesMan')
 import dijkstra
 import greedy
 import backtracking
@@ -384,4 +383,3 @@ def DisplayDistances(graf):
     graf.Save("Display.gr")
     graf.SaveDistances("Display.dis")
     subprocess.Popen(["GraphApplicationProf.exe", "display", "Display.GR", "Display.dis"])
-

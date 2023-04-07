@@ -2,7 +2,7 @@ import subprocess
 import sys
 import time
 
-# sys.path.append('PythonSalesMan')
+sys.path.append('PythonSalesMan')
 import graph
 import dijkstra
 import greedy
@@ -16,13 +16,13 @@ import branchAndBound
 
 graph.NomAlumne1 = "Guillem"
 graph.CognomsAlumne1 = "Garcia Dausà"
-graph.NIUAlumne1 = "1636279"
+graph.NIUAlumne1 = "1000000"
 
 # No modificar si nomes grup d'un alumne
 
 graph.NomAlumne2 = "Martí"
 graph.CognomsAlumne2 = "Llinés Viñals"
-graph.NIUAlumne2 = "1637804"
+graph.NIUAlumne2 = "1000000"
 
 # VERIFICAR ALUMNES =============================================================
 
@@ -38,23 +38,23 @@ if graph.CorrectionProcess(): sys.exit(0)
 # PROVES =======================================================================
 # ==============================================================================
 
-# g=graph.Graph()                     					# crear un graf
-# g.Load("TestDijkstra/Graf4.GR")     					# llegir el graf
-# g.SetDistancesToEdgeLength()        					# Posar les longituts de les arestes a la distancia entre vertexs
-# start=g.GetVertex("Start");         					# Obtenir el vertex origien de les distancies (distancia 0)
-# t0 = time.time()                    					# temps inicial
-# dijkstra.Dijkstra(g,start)          					# Calcular les distancies
-# t1 = time.time()                    					# Temps final
-# print("temps: ",t1-t0)              					# imprimir el temps d'execució
-# g.DisplayDistances()                					# Visualitza el graf i les distancies
-
 g=graph.Graph()                     					# crear un graf
-g.Load("TestSalesMan/RepeatVertex.GR")  				# llegir el graf
+g.Load("TestDijkstra/Desconectat.GR")     					# llegir el graf
 g.SetDistancesToEdgeLength()        					# Posar les longituts de les arestes a la distancia entre vertexs
-vis=graph.Visits(g);									# Crear visites
-vis.Load("TestSalesMan/RepeatVertex.VIS")				# Llegir les vistes
+start=g.GetVertex("Start");         					# Obtenir el vertex origien de les distancies (distancia 0)
 t0 = time.time()                    					# temps inicial
-trk=greedy.SalesmanTrackGreedy(g,vis)       #Cerca cami que pasi per les visites
+dijkstra.Dijkstra(g,start)          					# Calcular les distancies
 t1 = time.time()                    					# Temps final
 print("temps: ",t1-t0)              					# imprimir el temps d'execució
-trk.Display(vis)                    					# Visualitza el track i les visites sobre el graf el graf
+g.DisplayDistances()                					# Visualitza el graf i les distancies
+
+# g=graph.Graph()                     					# crear un graf
+# g.Load("TestSalesMan/RepeatVertex.GR")  				# llegir el graf
+# g.SetDistancesToEdgeLength()        					# Posar les longituts de les arestes a la distancia entre vertexs
+# vis=graph.Visits(g);									# Crear visites
+# vis.Load("TestSalesMan/RepeatVertex.VIS")				# Llegir les vistes
+# t0 = time.time()                    					# temps inicial
+# trk=greedy.SalesmanTrackGreedy(g,vis)       #Cerca cami que pasi per les visites
+# t1 = time.time()                    					# Temps final
+# print("temps: ",t1-t0)              					# imprimir el temps d'execució
+# trk.Display(vis)                    					# Visualitza el track i les visites sobre el graf el graf
