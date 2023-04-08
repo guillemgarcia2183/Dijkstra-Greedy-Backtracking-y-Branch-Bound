@@ -34,9 +34,14 @@ def SalesmanTrackGreedy(g,visits):
         "Mentre la llista de candidats sigui major a zero, farem el següent procediment"
         while candidats:
             "Apliquem l'algorisme Dijkstra pel node actual i busquem el candidat amb distància mínima"
-            aresta_cami = dijkstra.DijkstraQueue(g,node_actual)
+            aresta_cami, aresta_print = dijkstra.DijkstraQueue(g,node_actual)
             node_candidat,aresta_candidat = Cerca_Candidat_Minim(aresta_cami, candidats)
             
+            "Si no hi ha més candidats, s'acaba el recorregut"
+            if node_candidat == None:
+                break
+
+            # print("DIJKSTRA:", aresta_print)
             # print("NODE ACTUAL:", node_actual.Name)
             # print("NODE CANDIDAT:", node_candidat.Name)
             # print("ARESTA_CANDIDAT:", aresta_candidat)
@@ -80,7 +85,6 @@ def Cerca_Candidat_Minim(cami_arestes, candidats):
     
     "IMPLEMENTACIÓ"
     minim = math.inf
-    aresta_retorn = None
     node_retorn = None
     for vertex in cami_arestes:
         "Anem actualitzant iterativament el node amb mínima distància"
@@ -88,9 +92,8 @@ def Cerca_Candidat_Minim(cami_arestes, candidats):
             if vertex.DijkstraDistance < minim:
                 minim = vertex.DijkstraDistance
                 node_retorn = vertex
-                aresta_retorn = cami_arestes[vertex]
-                    
-    return node_retorn, aresta_retorn
+
+    return node_retorn, cami_arestes[node_retorn]
 
 
 def Afegir_ultima_aresta(desti, ultim_candidat, track):
