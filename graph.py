@@ -19,7 +19,7 @@ class Vertex:
         self.x = x
         self.y = y
         self.Edges = []
-        self.DijkstraDistance = 1.7976931348623157081e+308
+        self.DijkstraDistance = 0
 # EDGE =========================================================================
 
 class Edge:

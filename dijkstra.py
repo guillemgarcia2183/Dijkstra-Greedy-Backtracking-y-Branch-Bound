@@ -57,7 +57,14 @@ def Dijkstra(g,start):
     if start in g.Vertices and len(g.Vertices) > 0:
         "Inicialitzem les següents variables"
         visitats = dict() #Controla els nodes que estan visitats
-        distancies = {x:x.DijkstraDistance for x in g.Vertices} #Controla les distancies mínimes d'aquests nodes
+        distancies = dict()
+        
+        for vertex in g.Vertices:
+            vertex.DijkstraDistance = 1.7976931348623157081e+308
+            distancies[vertex] = vertex.DijkstraDistance
+        # distancies = {x:1.7976931348623157081e+308 for x in g.Vertices} #Controla les distancies mínimes d'aquests nodes
+        
+        
         distancies[start] = 0 
         start.DijkstraDistance = 0
         comptador = 0
@@ -111,13 +118,18 @@ def DijkstraQueue(g,start):
     if start in g.Vertices and len(g.Vertices) > 0:
         "Per tal de fer l'algorisme Greedy, necessitem una variable que guardi les arestes precedents"
         cami_arestes = {x: [] for x in g.Vertices}
-        cami_print = {x.Name: [] for x in g.Vertices}
+        # cami_print = {x.Name: [] for x in g.Vertices}
 
         "Creem una cua de prioritat per poder fer l'algorisme. La prioritat serà la distància més curta"
         cua = queue.PriorityQueue()
         visitats = dict() #Controla els nodes que estan visitats
+        distancies = dict()
         
-        distancies = {x:x.DijkstraDistance for x in g.Vertices} #Controla les distancies mínimes d'aquests nodes
+        for vertex in g.Vertices:
+            vertex.DijkstraDistance = 1.7976931348623157081e+308
+            distancies[vertex] = vertex.DijkstraDistance
+            
+        # distancies = {x:x.DijkstraDistance for x in g.Vertices} #Controla les distancies mínimes d'aquests nodes
         
         distancies[start] = 0
         start.DijkstraDistance = 0
@@ -138,16 +150,20 @@ def DijkstraQueue(g,start):
                         cua.put((aresta.Destination.DijkstraDistance, aresta.Destination))
                         
                         "Cada vegada que s'actualitza la distància, s'actualitza l'aresta precedent"
+                        if len(cami_arestes[aresta.Destination]) > 0:
+                            cami_arestes[aresta.Destination] = []
+                            # cami_print[aresta.Destination.Name] = []
+                            
                         for conn in cami_arestes[node_actual]:
                             cami_arestes[aresta.Destination].append(conn)
-                            cami_print[aresta.Destination.Name].append(conn.Name)
+                            # cami_print[aresta.Destination.Name].append(conn.Name)
 
                         cami_arestes[aresta.Destination].append(aresta)
-                        cami_print[aresta.Destination.Name].append(aresta.Name)
+                        # cami_print[aresta.Destination.Name].append(aresta.Name)
 
             
         "Return de la llista per aplicar-la en l'algorisme Greedy"
-        return cami_arestes, cami_print
+        return cami_arestes
     
     # print("ALGORISME DIJKSTRA_QUEUE FINALITZAT!")
     # print("###############################")

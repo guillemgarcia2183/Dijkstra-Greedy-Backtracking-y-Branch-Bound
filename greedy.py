@@ -34,7 +34,7 @@ def SalesmanTrackGreedy(g,visits):
         "Mentre la llista de candidats sigui major a zero, farem el següent procediment"
         while candidats:
             "Apliquem l'algorisme Dijkstra pel node actual i busquem el candidat amb distància mínima"
-            aresta_cami, aresta_print = dijkstra.DijkstraQueue(g,node_actual)
+            aresta_cami = dijkstra.DijkstraQueue(g,node_actual)
             node_candidat,aresta_candidat = Cerca_Candidat_Minim(aresta_cami, candidats)
             
             "Si no hi ha més candidats, s'acaba el recorregut"
@@ -51,14 +51,22 @@ def SalesmanTrackGreedy(g,visits):
             for aresta in aresta_candidat:
                 if aresta not in graf_retorn.Edges:
                     graf_retorn.AddLast(aresta)
+                    
+                # if aresta not in graf_retorn.Edges:
+                #     graf_retorn.AddLast(aresta)
             
             "Borrem el node trobat dels candidats i actualitzem el node actual"
-            candidats.remove(node_candidat)
             node_actual = node_candidat        
+            candidats.remove(node_candidat)
         
         "Afegim l'aresta del últim node candidat al node destí"
-        Afegir_ultima_aresta(visits.Vertices[-1], node_actual, graf_retorn)
+        aresta_cami = dijkstra.DijkstraQueue(g,node_actual)
+        recorregut_fins_desti = aresta_cami[visits.Vertices[-1]]
+        for aresta in recorregut_fins_desti:
+            if aresta not in graf_retorn.Edges:
+                graf_retorn.AddLast(aresta)
         
+
         "Retornem el Track amb el recorregut de les arestes"
         return graf_retorn
     "En cas que no es compleixi les precondicions, retorna un track buit"
@@ -92,29 +100,31 @@ def Cerca_Candidat_Minim(cami_arestes, candidats):
             if vertex.DijkstraDistance < minim:
                 minim = vertex.DijkstraDistance
                 node_retorn = vertex
+    
+    try:
+        return node_retorn, cami_arestes[node_retorn]
+    except:
+        return None,None
 
-    return node_retorn, cami_arestes[node_retorn]
-
-
-def Afegir_ultima_aresta(desti, ultim_candidat, track):
-    """
-    Troba l'aresta que connecta el vertex destí i l'últim candidat i l'afegeix al Track
-    Parameters
-    ----------
-    desti : Class Vertex
-        Vertex destí
-    ultim_candidat : Class Vertex
-        Vertex últim en fer el bucle while
-    track : Class Track
-        Track amb els camí que ha fet l'algorisme Greedy
-    Returns
-    -------
-    None.
-    """
-    "IMPLEMENTACIÓ"
-    arestes_candidat = ultim_candidat.Edges
-    "Recorrem les arestes del candidat iterativament fins trobar l'aresta destí"
-    for aresta in arestes_candidat:
-        if aresta.Destination == desti:
-            track.AddLast(aresta)
-            return 
+# def Afegir_ultima_aresta(desti, ultim_candidat, track, graf):
+#     """
+#     Troba l'aresta que connecta el vertex destí i l'últim candidat i l'afegeix al Track
+#     Parameters
+#     ----------
+#     desti : Class Vertex
+#         Vertex destí
+#     ultim_candidat : Class Vertex
+#         Vertex últim en fer el bucle while
+#     track : Class Track
+#         Track amb els camí que ha fet l'algorisme Greedy
+#     Returns
+#     -------
+#     None.
+#     """
+#     "IMPLEMENTACIÓ"
+#     aresta_cami, aresta_print = dijkstra.DijkstraQueue(graf,ultim_candidat)
+#     "Recorrem les arestes del candidat iterativament fins trobar l'aresta destí"
+#     for aresta in arestes_candidat:
+#         if aresta.Destination == desti:
+#             track.AddLast(aresta)
+#             return 
