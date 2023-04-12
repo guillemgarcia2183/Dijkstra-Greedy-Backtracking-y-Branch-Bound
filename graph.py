@@ -13,7 +13,6 @@ import branchAndBound
 # VERTEX =======================================================================
 
 class Vertex:
-    __slots__ = "Name", "x", "y", "Edges", "DijkstraDistance"
     def __init__(self, name, x, y):
         self.Name = name
         self.x = x
@@ -23,7 +22,6 @@ class Vertex:
 # EDGE =========================================================================
 
 class Edge:
-    __slots__ = "Name", "Length", "Origin", "Destination", "ReverseEdge", "Saved"
     def __init__(self,name,length,origin,destination):
         self.Name = name
         self.Length = length
@@ -35,7 +33,6 @@ class Edge:
 # GRAPH =======================================================================
 
 class Graph:
-    __slots__ = "Vertices", "Edges"
     def __init__(self):
         self.Vertices = []
         self.Edges = []
@@ -147,7 +144,6 @@ class Graph:
 # Visits ======================================================================
 
 class Visits:
-    __slots__ = "Graph", "Vertices"
     def __init__(self,g):
         self.Graph=g
         self.Vertices=[]
@@ -178,7 +174,6 @@ class Visits:
 # Track ========================================================================
 
 class Track:
-    __slots__ = "Graph", "Edges"
     def __init__(self,g):
         self.Graph=g
         self.Edges=[]
