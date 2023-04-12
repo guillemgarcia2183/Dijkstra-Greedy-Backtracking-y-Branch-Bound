@@ -4,7 +4,7 @@ import sys
 import subprocess
 import time
 
-sys.path.append('PythonSalesMan')
+# sys.path.append('PythonSalesMan')
 import dijkstra
 import greedy
 import backtracking
