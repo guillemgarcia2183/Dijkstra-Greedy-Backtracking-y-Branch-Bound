@@ -82,7 +82,7 @@ def Dijkstra(g,start):
         comptador += 1
         
 # DijkstraQueue ================================================================
-def DijkstraQueue(g,start,greedy=None):
+def DijkstraQueue(g,start):
     """
     La funció iniciarà els pesos dels nodes amb l'ajuda de la llibreria queue
     Parameters

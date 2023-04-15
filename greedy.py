@@ -77,8 +77,10 @@ def Cerca_Candidat_Minim(cami_arestes, candidats):
     
     Returns
     -------
-    aresta_retorn : Class Vertex
+    node_retorn : Class Vertex
         Node amb la distància mínima
+    arestes_node: List
+        Llista amb els vèrtex dels node mínim
     """
     
     "IMPLEMENTACIÓ"

@@ -13,16 +13,20 @@ import branchAndBound
 # ==============================================================================
 # IDENTIFICACIO DELS ALUMNES ===================================================
 # ==============================================================================
+"""
+Guillem Garcia Dausà: 1636279
+Martí Llinés Viñals: 1637804
+"""
 
 graph.NomAlumne1 = "Guillem"
 graph.CognomsAlumne1 = "Garcia Dausà"
-graph.NIUAlumne1 = "1000000" #Real: 1636279
+graph.NIUAlumne1 = "1000000" 
 
 # No modificar si nomes grup d'un alumne
 
 graph.NomAlumne2 = "Martí"
 graph.CognomsAlumne2 = "Llinés Viñals"
-graph.NIUAlumne2 = "1000000" #Real: 1637804
+graph.NIUAlumne2 = "1000000" 
 
 # VERIFICAR ALUMNES =============================================================
 
