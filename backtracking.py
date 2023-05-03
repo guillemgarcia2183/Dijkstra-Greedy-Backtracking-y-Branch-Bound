@@ -7,63 +7,103 @@ import copy
 
 # Funcions auxiliars Backtracking =======================================================================
 
-def es_Cami_Correcte(n_punts_visitats, llista_punts_visitar):
-    if n_punts_visitats == len(llista_punts_visitar):
-        return True
-    return False
-    
-def es_Cami_Optim(cost_actual, cost_optim):
-    if cost_actual < cost_optim:
-        return True
-    return False
+def es_Cami_Correcte(recorregut, punts_visitar):
+    """
 
-def Backtracking_Recursiu(node_inicial, node_desti, n_punts_visitats, recorregut_arestes, llista_punts_visitar, cost, cost_optim, cami_optim):    
-    "Cas base de la recursió"
-    if node_inicial == node_desti: #Si hem arribat del node origen al destí
-        if n_punts_visitats == len(llista_punts_visitar): #Comprovem que s'han visitats tots els punts intermitjos
-            return n_punts_visitats,recorregut_arestes, cost #Retorna el recorregut en cas de ser una solució possible
-        else:
-            return None, None, None #Retorna None en cas de no ser solució
+    Parameters
+    ----------
+    recorregut : List
+        Camí d'arestes del node origen al node destí
+    punts_visitar : Set
+        Nodes que s'han de visitar obligatòriament abans d'arribar el destí
+
+    Returns
+    -------
+    bool
+        Retorna si el camí és correcte
+    """
     
-    "Recorrem els veins del node actual"
+    recorregut = [n.Destination for n in recorregut] #Passem les aresta a nodes
+    for punt in punts_visitar:
+        if punt not in recorregut:
+            return False
+    return True
+
+def Backtracking_Pur(node_inicial, node_desti, recorregut, punts_visitar, cost, cost_optim, cami_optim):
+    """
+
+    Parameters
+    ----------
+    node_inicial : Class Node
+        Node actual en la recursió
+    node_desti : Class Node
+        Node al que volem arribar en cada camí
+    recorregut : List
+        Recorregut d'arestes durant la recursió
+    punts_visitar : Set
+        Punts intermitjos que ha de tenir el recorregut
+    cost : Float
+        Cost del camí
+    cost_optim : Float
+        Cost del camí més òptim
+    cami_optim : List
+        Llista d'arestes amb el camí més òptim
+
+    Returns
+    -------
+    cost_optim : Float
+        Cost del camí més òptim
+    cami_optim : List
+        Llista d'arestes amb el camí més òptim
+
+
+    """
+    "Cas base de la recursió: Mirem si el node ha arribat al destí i si aquest camí és una possible solució"
+    if node_inicial == node_desti:
+        if es_Cami_Correcte(recorregut, punts_visitar): #set(llista_punts_visitar).issubset(set([n.Destination for n in recorregut]))
+            return recorregut, cost #Retorna el recorregut i el cost en cas de ser una solució possible
+        else:
+            return None, None #Retorna None en cas de no ser-ho
+
+    "Visitem els veïns del node actual"
     for aresta in node_inicial.Edges:
+        "Mira si hi ha estat visitada l'aresta, en cas positiu passem a la següent iteració"
         try:
             aresta.visitat
         except:
             aresta.visitat = False
-            
-        "Saltem al següent veí si s'ha visitat"
-        if aresta.visitat:
+
+        if aresta.visitat or aresta in recorregut:
             continue
+
+        "Fem el pas endevant en cas de ser un punt intermig"
+        if aresta.Destination in punts_visitar:
+            aresta.visitat = True
         
-        "Afegim al recorregut i llista de visitats"
-        recorregut_arestes.append(aresta)
-        aresta.visitat = True
+        "Afegim l'aresta al recorregut i calculem el nou cost del camí"
+        nou_recorregut = recorregut + [aresta]
+        nou_cost = cost + aresta.Length
         
-        "En cas de ser el node destí un punt intermig, sumem el comptador"
-        if aresta.Destination in llista_punts_visitar:
-            n_punts_visitats += 1
-        
-        "Fem la recursió a partir del vei fins arribar al node destí en cas que el camí sigui òptim"
-        if cost + aresta.Length < cost_optim:
-            new_punts_visitats, new_recorregut_arestes, new_cost = Backtracking_Recursiu(aresta.Destination, node_desti, n_punts_visitats, recorregut_arestes, llista_punts_visitar, cost + aresta.Length, cost_optim, cami_optim)
-            "Si troba una solució"
-            if new_recorregut_arestes:
-                if es_Cami_Optim(new_cost, cost_optim):
-                    cost_optim = new_cost
-                    cami_optim = new_recorregut_arestes
-                else:
-                    recorregut_arestes.remove(aresta)
-                    aresta.visitat = False
-            else:
-                recorregut_arestes.remove(aresta)
-                aresta.visitat = False
-        else:
-            recorregut_arestes.remove(aresta)
-            aresta.visitat = False
+        "Comprovem si el camí actual està sent més eficient"
+        if nou_cost < cost_optim:
+            "En cas de ser més eficient, continuem fent la recursió amb els veïns"
+            res_recorregut, res_cost = Backtracking_Pur(aresta.Destination, node_desti, nou_recorregut, punts_visitar, nou_cost, cost_optim, cami_optim)
             
-    return n_punts_visitats, recorregut_arestes, cost
-    
+            "Si ha retornat un camí i és òptim l'actualitzem"
+            if res_recorregut and res_cost < cost_optim:
+                cost_optim = res_cost
+                cami_optim = res_recorregut
+
+        "Fem el pas enrere en cas de ser un punt intermig"
+        if aresta.Destination in punts_visitar:
+            aresta.visitat = False
+
+    if cami_optim:
+        return cami_optim, cost_optim
+    else:
+        return None, None
+
+
 
 def SalesmanTrackBacktracking(g,visits):
     """
@@ -79,21 +119,25 @@ def SalesmanTrackBacktracking(g,visits):
     Returns
     -------
     Class Track
+        Track de sortida
     """
     
     "IMPLEMENTACIÓ"
     visits.Vertices[0].visitat = True
-    recorregut_arestes = list()
-    llista_punts_visitar = visits.Vertices[1:-1]
-    print("PUNTS A VISITAR:", llista_punts_visitar)
-    print("######################")
-
+    recorregut = list()
+    punts_visitar = set(visits.Vertices[1:-1])
     graf_retorn = graph.Track(g)
-    nodes,recorregut, cost = Backtracking_Recursiu(visits.Vertices[0], visits.Vertices[-1], 0, recorregut_arestes, llista_punts_visitar, 0, math.inf, [])
-    
-    print("RECORREGUT/COST:", recorregut, cost)
-    print("######################")
 
+    # print("PUNTS A VISITAR:", llista_punts_visitar)
+    # print("######################")
+
+    "Fem l'algorisme Backtracking Recursiu"
+    recorregut, cost = Backtracking_Pur(visits.Vertices[0], visits.Vertices[-1],recorregut, punts_visitar, 0, math.inf, [])
+    
+    # print("RECORREGUT/COST:", recorregut, cost)
+    # print("######################")
+    
+    "Afegim al track el recorregut òptim d'arestes"
     for aresta in recorregut:
          graf_retorn.AddLast(aresta)
         
