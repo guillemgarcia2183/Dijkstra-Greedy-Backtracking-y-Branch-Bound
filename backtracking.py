@@ -3,10 +3,8 @@ import math
 import sys
 import queue
 import dijkstra
-import copy
 
 # Funcions auxiliars Backtracking =======================================================================
-
 def es_Cami_Correcte(recorregut, punts_visitar):
     """
 
@@ -25,6 +23,7 @@ def es_Cami_Correcte(recorregut, punts_visitar):
     
     recorregut = [n.Destination for n in recorregut] #Passem les aresta a nodes
     for punt in punts_visitar:
+        "Busquem si el recorregut conté tots els punts intermitjos"
         if punt not in recorregut:
             return False
     return True
@@ -59,11 +58,8 @@ def Backtracking_Pur(node_inicial, node_desti, recorregut, punts_visitar, cost, 
 
     """
     "Cas base de la recursió: Mirem si el node ha arribat al destí i si aquest camí és una possible solució"
-    if node_inicial == node_desti:
-        if es_Cami_Correcte(recorregut, punts_visitar): #set(llista_punts_visitar).issubset(set([n.Destination for n in recorregut]))
-            return recorregut, cost #Retorna el recorregut i el cost en cas de ser una solució possible
-        else:
-            return None, None #Retorna None en cas de no ser-ho
+    if node_inicial == node_desti and es_Cami_Correcte(recorregut, punts_visitar): #set(llista_punts_visitar).issubset(set([n.Destination for n in recorregut]))
+        return recorregut, cost
 
     "Visitem els veïns del node actual"
     for aresta in node_inicial.Edges:
@@ -84,7 +80,7 @@ def Backtracking_Pur(node_inicial, node_desti, recorregut, punts_visitar, cost, 
         nou_recorregut = recorregut + [aresta]
         nou_cost = cost + aresta.Length
         
-        "Comprovem si el camí actual està sent més eficient"
+        "Comprovem si el camí actual està sent més eficient (podar si no compleix)"
         if nou_cost < cost_optim:
             "En cas de ser més eficient, continuem fent la recursió amb els veïns"
             res_recorregut, res_cost = Backtracking_Pur(aresta.Destination, node_desti, nou_recorregut, punts_visitar, nou_cost, cost_optim, cami_optim)
@@ -97,12 +93,12 @@ def Backtracking_Pur(node_inicial, node_desti, recorregut, punts_visitar, cost, 
         "Fem el pas enrere en cas de ser un punt intermig"
         if aresta.Destination in punts_visitar:
             aresta.visitat = False
-
+    
+    "Si es visita tots els veïns, comprovem si hem obtingut un camí òptim i el retornem"
     if cami_optim:
         return cami_optim, cost_optim
     else:
         return None, None
-
 
 
 def SalesmanTrackBacktracking(g,visits):
@@ -128,19 +124,14 @@ def SalesmanTrackBacktracking(g,visits):
     punts_visitar = set(visits.Vertices[1:-1])
     graf_retorn = graph.Track(g)
 
-    # print("PUNTS A VISITAR:", llista_punts_visitar)
-    # print("######################")
-
     "Fem l'algorisme Backtracking Recursiu"
     recorregut, cost = Backtracking_Pur(visits.Vertices[0], visits.Vertices[-1],recorregut, punts_visitar, 0, math.inf, [])
     
-    # print("RECORREGUT/COST:", recorregut, cost)
-    # print("######################")
-    
     "Afegim al track el recorregut òptim d'arestes"
     for aresta in recorregut:
-         graf_retorn.AddLast(aresta)
-        
+        graf_retorn.AddLast(aresta)
+
+    
     return graf_retorn
 
 # ==============================================================================
