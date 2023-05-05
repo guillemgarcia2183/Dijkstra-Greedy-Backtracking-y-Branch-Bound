@@ -1,9 +1,6 @@
 import graph
 import math
-import sys
-import queue
 import dijkstra
-import numpy as np
 
 # Funcions auxiliars Backtracking =======================================================================
 def es_Cami_Correcte(recorregut, punts_visitar):
@@ -114,7 +111,7 @@ def Backtracking_Pur(node_inicial, node_desti, recorregut, punts_visitar, cost, 
 
     """
     "Cas base de la recursió: Mirem si el node ha arribat al destí i si aquest camí és una possible solució"
-    if node_inicial == node_desti and es_Cami_Correcte(recorregut, punts_visitar): #set(llista_punts_visitar).issubset(set([n.Destination for n in recorregut]))
+    if node_inicial == node_desti and es_Cami_Correcte(recorregut, punts_visitar):
         return recorregut, cost
 
     "Visitem els veïns del node actual"
