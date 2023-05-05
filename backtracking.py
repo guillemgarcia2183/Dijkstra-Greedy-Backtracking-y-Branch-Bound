@@ -3,11 +3,11 @@ import math
 import sys
 import queue
 import dijkstra
+import numpy as np
 
 # Funcions auxiliars Backtracking =======================================================================
 def es_Cami_Correcte(recorregut, punts_visitar):
     """
-
     Parameters
     ----------
     recorregut : List
@@ -29,8 +29,19 @@ def es_Cami_Correcte(recorregut, punts_visitar):
     return True
 
 def Matriu_Camins_Optims(graf):
+    """
+    Parameters
+    ----------
+    graf : Class Graf
+        Graf amb un conjunt de nodes i arestes
+
+    Returns
+    -------
+    matriu : List
+        Matriu que conté en cada fila els camins òptims per cada vèrtex del graf
+
+    """
     matriu = []
-    diccionari_indexs = dict()
     for punt in graf.Vertices:
         llista = []
         cami_arestes = dijkstra.DijkstraQueue_Greedy(graf, punt)
@@ -43,17 +54,26 @@ def Matriu_Camins_Optims(graf):
                 llista.append((vertex,pes,cami_arestes[vertex]))
                         
         llista_ordenada = sorted(llista, key=lambda tupla: tupla[1])
-        diccionari_indexs[punt] = len(matriu)
+        punt.index = len(matriu)
         matriu.append(llista_ordenada)
     
-    print("MATRIU: ", matriu)
-    print("#########################")
-    print("INDEXS: ", diccionari_indexs)
-    print("#########################")
-
-    return matriu, diccionari_indexs
-
+    return matriu
+            
 def Arestes_Visitades(arestes,recorregut):
+    """
+    Parameters
+    ----------
+    arestes : List
+        Llista del camí d'arestes del node actual
+    recorregut : List
+        Llista amb el recorregut d'arestes
+
+    Returns
+    -------
+    bool
+        Boleà que permet distingir si alguna aresta ja ha estat visitada
+
+    """
     for aresta in arestes:
         try:
             aresta.visitat
@@ -136,7 +156,7 @@ def Backtracking_Pur(node_inicial, node_desti, recorregut, punts_visitar, cost, 
     else:
         return None, None
 
-def Backtracking_Greedy(matriu, indexs, node_inicial, node_desti, recorregut, punts_visitar, cost, cost_optim, cami_optim):
+def Backtracking_Greedy(matriu, node_inicial, node_desti, recorregut, punts_visitar, cost, cost_optim, cami_optim):
     """
 
     Parameters
@@ -168,12 +188,11 @@ def Backtracking_Greedy(matriu, indexs, node_inicial, node_desti, recorregut, pu
 
     """
     "Cas base de la recursió: Mirem si el node ha arribat al destí i si aquest camí és una possible solució"
-    if node_inicial == node_desti and es_Cami_Correcte(recorregut, punts_visitar): #set(llista_punts_visitar).issubset(set([n.Destination for n in recorregut]))
+    if node_inicial == node_desti and es_Cami_Correcte(recorregut, punts_visitar):
         return recorregut, cost
     
     "Obtenim la llista de camins del node actual"
-    index_actual = indexs[node_inicial]
-    llista = matriu[index_actual]
+    llista = matriu[node_inicial.index]
     for tupla in llista:
         if Arestes_Visitades(tupla[2], recorregut):
             continue
@@ -186,7 +205,7 @@ def Backtracking_Greedy(matriu, indexs, node_inicial, node_desti, recorregut, pu
         nou_cost = cost + tupla[1]
         
         if nou_cost < cost_optim:
-            res_recorregut, res_cost = Backtracking_Greedy(matriu, indexs, tupla[0], node_desti, nou_recorregut, punts_visitar, nou_cost, cost_optim, cami_optim)
+            res_recorregut, res_cost = Backtracking_Greedy(matriu, tupla[0], node_desti, nou_recorregut, punts_visitar, nou_cost, cost_optim, cami_optim)
             
             "Si ha retornat un camí i és òptim l'actualitzem"
             if res_recorregut and res_cost < cost_optim:
@@ -262,10 +281,10 @@ def SalesmanTrackBacktracking(g, visits):
     punts_visitar = set(visits.Vertices[1:-1])
     graf_retorn = graph.Track(g)
     
-    matriu,indexs = Matriu_Camins_Optims(g)
+    matriu = Matriu_Camins_Optims(g)
 
     "Fem l'algorisme Backtracking Recursiu"
-    recorregut, cost = Backtracking_Greedy(matriu, indexs, visits.Vertices[0], visits.Vertices[-1],recorregut, punts_visitar, 0, math.inf, [])
+    recorregut, cost = Backtracking_Greedy(matriu, visits.Vertices[0], visits.Vertices[-1],recorregut, punts_visitar, 0, math.inf, [])
     
     "Afegim al track el recorregut òptim d'arestes"
     for aresta in recorregut:
